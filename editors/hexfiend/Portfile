@@ -1,0 +1,74 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+# this is a modified portfile that installs a binary version for 10.7+
+
+PortSystem      1.0
+PortGroup       xcode 1.0
+PortGroup       github 1.0
+
+github.setup    ridiculousfish HexFiend 2.8.0 v
+name            hexfiend
+epoch           1
+categories      editors aqua
+maintainers     cal openmaintainer
+license         BSD
+
+description     A fast and clever hex editor for Mac OS X
+long_description \n\
+    * Insert, delete, rearrange. Hex Fiend is not limited to in-place changes like some hex editors.\n\
+    * Work with huge files. Hex Fiend can handle as big a file as you're able to create. It's been tested on files as \
+      large as 118 GB.\n\
+    * Small footprint. Hex Fiend does not need to keep your files in memory. You won't dread launching or working with \
+       Hex Fiend even on low-RAM machines.\n\
+    * Fast. Open a huge file, scroll around, copy and paste, all instantly. Find what you're looking for with fast \
+       searching.\n\
+    * Smart saving. Hex Fiend knows not to waste time overwriting the parts of your files that haven't changed.\n\
+    * Data inspector. Interpret data as integer or floating point, signed or unsigned, big or little endian...\n\
+    * Smooth scrolling. No separate pages - scroll like any text document.
+
+supported_archs x86_64
+universal_variant no
+
+distname            Hex_Fiend_2.8.dmg
+master_sites        https://github.com/ridiculousfish/HexFiend/releases/download/v2.8.0/
+checksums           rmd160  0ece82c4616f888e5c407e0fd57f1f57f73fa53d \
+                    sha256  42dab86945759333669bbe2dc01c20294ee5ec5f87530e654454cdb2853736cb
+
+# there is no suffix for this file
+extract.suffix
+
+# there is no extract phase
+extract {}
+
+# mount the disk image, which has been downloaded to the distpath
+post-extract {
+    system -W ${distpath} "hdiutil attach Hex_Fiend_2.8.dmg -noverify"
+}
+
+
+pre-configure {
+    ui_msg "Hex Fiend cannot be built on 10.7. Installing pre-built binary instead."
+}
+# there is no configure or build phase
+use_configure       no
+build {}
+
+if { ${subport} eq ${name}  } {
+    destroot {
+        xinstall -m 755 -d ${destroot}${applications_dir}
+        copy "/Volumes/Hex Fiend 2.8/Hex Fiend.app" "${destroot}${applications_dir}"
+    }
+}
+
+subport hexfiend-framework {
+    destroot {
+        copy "/Volumes/Hex Fiend 2.8/Hex Fiend.app/Contents/Frameworks/HexFiend.framework" ${destroot}${frameworks_dir}
+        set framework_lib ${frameworks_dir}/HexFiend.framework/Versions/A/HexFiend
+        system "install_name_tool -id ${framework_lib} ${destroot}${framework_lib}"
+    }
+}
+
+# have to double escape spaces
+post-destroot {
+    system "hdiutil detach /Volumes/Hex\\ Fiend\\ 2.8"
+}
