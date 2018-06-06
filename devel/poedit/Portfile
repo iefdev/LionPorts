@@ -35,7 +35,9 @@ depends_lib         port:gettext \
 depends_skip_archcheck grep pkgconfig boost
 
 # remove some additional features, especially sparkle because macports handles updates
-configure.args      --disable-spellchecking \
+configure.args      CC="${configure.cc} ${configure.cflags}" \
+                    CXX="${configure.cxx} ${configure.cxxflags}" \
+                    --disable-spellchecking \
                     --disable-transmem \
                     --without-sparkle \
                     --with-wxdir=${wxWidgets.wxdir}
