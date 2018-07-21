@@ -16,6 +16,7 @@ homepage            http://qt-project.org/wiki/Category:Tools::QtCreator
 universal_variant   no
 supported_archs     x86_64
 
+configure.cxx_stdlib libc++
 
 if { ${subport} eq ${name}  } {
     distname            qt-creator-opensource-mac-x86_64-3.6.1.dmg
