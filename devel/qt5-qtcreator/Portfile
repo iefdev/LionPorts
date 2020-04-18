@@ -20,7 +20,7 @@ configure.cxx_stdlib libc++
 
 if { ${subport} eq ${name}  } {
     distname            qt-creator-opensource-mac-x86_64-3.6.1.dmg
-    master_sites        https://download.qt.io/official_releases/qtcreator/3.6/3.6.1/
+    master_sites        https://download.qt.io/archive/qtcreator/3.6/3.6.1/
     checksums           rmd160  1b88e65d31d6d4b34d3e52fc53b3ec8f18d06a7c \
                         sha256  0e4806e69105d141f767908694d0c59739fb55bfd01f5e72b83a6abad87203ae
 
